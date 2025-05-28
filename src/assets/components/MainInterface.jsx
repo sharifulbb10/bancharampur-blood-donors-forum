@@ -14,7 +14,9 @@ export default function MainInterface() {
 	useEffect(()=>{
 		const getData = async () => {
 			try {
-				const response = await fetch("https://docs.google.com/spreadsheets/d/1Oc03vJPT66H68EJJ2fa3AT3iDmxaRZQ6Re4KrbG2lFM/gviz/tq?tqx=out:json");
+				// GOOGLE SHEET LINK- 	https://docs.google.com/spreadsheets/d/1yk3Ccv5u3Qe5MpmQUhRF_KDtPKsMd3MBficOXe7o5bk/edit?usp=sharing
+				// API- 				https://docs.google.com/spreadsheets/d/1yk3Ccv5u3Qe5MpmQUhRF_KDtPKsMd3MBficOXe7o5bk/gviz/tq?tqx=out:json
+				const response = await fetch("https://docs.google.com/spreadsheets/d/1yk3Ccv5u3Qe5MpmQUhRF_KDtPKsMd3MBficOXe7o5bk/gviz/tq?tqx=out:json");
 				const text = await response.text();
 				const json = JSON.parse(text.substring(47).slice(0, -2)); // to remove unnecessary parts from the api
 				const rows = json.table.rows.map(row => row.c.map(cell => (cell? cell.v : "")));
@@ -53,8 +55,8 @@ export default function MainInterface() {
 	const searchFunction = () => {
 		const filteredData = data.filter(eachItem => {
 			const isBloodGroupMatched = bloodGroup ? eachItem.includes(bloodGroup) : true;
-			const isLocationMatched = location.trim() ? eachItem[4].toLowerCase().includes(location.toLowerCase()) : true;
-			const isNameMatched = donorsName.trim() ? eachItem[2].trim().toLowerCase().includes(donorsName.toLowerCase()) : true;
+			const isLocationMatched = location.trim() ? eachItem[4].trim().toLowerCase().includes(location.trim().toLowerCase()) : true;
+			const isNameMatched = donorsName.trim() ? eachItem[2].trim().toLowerCase().includes(donorsName.trim().toLowerCase()) : true;
 
 			if (isBloodGroupMatched && isLocationMatched && isNameMatched) {
 				return true;
@@ -73,7 +75,17 @@ export default function MainInterface() {
 	// in the extracted search result
 	// you will find the use of this function in line (169 - 173).
 	function splittedText(text, searched) {
-		return searched ? text.toLowerCase().split(searched.toLowerCase()) : [text, "", ""];
+		text = text.toLowerCase().trim();
+		searched = searched.toLowerCase().trim();
+		console.log("searched", searched);
+		let arr = searched ? text.split(searched) : null;
+		if (arr && arr.length > 2) {
+			let lastElements = arr.filter((_, index)=> index>0)
+			let newArr = [arr[0], lastElements.length === 1 ? lastElements[0]+searched : lastElements.join(searched)];
+			// console.log(newArr)
+			return newArr;
+		}
+		return searched ? arr : [text, "", ""];
 	}
 
 	// this function will evaluate if a user can donate blood or not, when he/she donated blood
@@ -109,20 +121,22 @@ export default function MainInterface() {
 		<div className="">
 			<div className="mt-6 mx-4 flex justify-between font-bold text-red-700">
 				<div>
-					<h2 className="text-lg">Badhon</h2>
-					<h2 className="text-sm">Narsingdi Govt. College</h2>
+					<a href="https://facebook.com/groups/bbdf2016/">
+						<h2 className="text-[16px] font-medium">Bancharampur Blood Donors Forum</h2>
+						<h2 className="text-sm font-light">রক্ত দেওয়ার জন্যই আমরা - Bancharampur</h2>
+					</a>
 				</div>
 
 				<div className="relative">
-					<div className={`w-8 h-8 bg-black rounded flex flex-col justify-center items-center ${menuOpened ? 'relative': 'gap-2'} relative z-10`} onClick={handleMenuClick}>
+					<div className={`w-8 h-8 bg-slate-800 rounded flex flex-col justify-center items-center ${menuOpened ? 'relative': 'gap-2'} relative z-10`} onClick={handleMenuClick}>
 						<div className={`w-5 h-[2px] bg-white ${menuOpened ? 'absolute inset-0 m-[auto] rotate-45' : null}`}></div>
 						<div className={`w-5 h-[2px] bg-white ${menuOpened ? 'absolute inset-0 m-[auto] -rotate-45' : null}`}></div>
 					</div>
-					<div className={`absolute w-[70vw] h-50 top-0 right-0 bg-zinc-800 ${menuOpened ? 'visible' : 'hidden'}`}>
+					<div className={`absolute w-[70vw] h-50 top-0 right-0 bg-slate-800 ${menuOpened ? 'visible' : 'hidden'}`}>
 						<div className="mt-10 text-sm text-white font-light">
-							<section className="mx-5 mt-2 p-1"><a href="#">View Source Code & improve it</a></section>
-							<section className="mx-5 mt-4 p-1"><a href="mailto:sharifulbb10@gmail.com?subject=Found a problem in your BADON QUICK DONOR FINDER project">Report a bug</a></section>
-							<section className="mx-5 mt-4 p-1"><a href="https://forms.gle/JrGsH6vggNQPkU2a9">Register as blood doner</a></section>
+							<section className="mx-5 mt-2 p-1"><a href="https://github.com/sharifulbb10/bancharampur-blood-donors-forum">View Source Code & improve it</a></section>
+							<section className="mx-5 mt-4 p-1"><a href="mailto:sharifulbb10@gmail.com?subject=Found a problem in your BANCHARAMPUR BLOOD DONORS project">Report a bug</a></section>
+							<section className="mx-5 mt-4 p-1"><a href="https://forms.gle/39iRRfQfLRfNiiP29">Register as blood doner</a></section>
 						</div>
 					</div>
 				</div>
@@ -137,10 +151,10 @@ export default function MainInterface() {
 				</a>
 			</div>
 
-			<div className="text-sm mx-4 mt-6">
-				<div className="mb-2">
-					<p className="inline-block w-30 mr-2">Blood Group</p>
-					<select className="text-right pl-2 border-1 px-1 py-[4px] rounded" onChange={bloodGroupQuery}>
+			<div className="text-sm mx-2 p-2 mt-6 bg-green-50">
+				<div className="mb-2 flex items-center">
+					<p className="w-45 mr-2">Blood Group</p>
+					<select className="border-1 px-2 py-[4px] rounded w-full md:w-1/5" onChange={bloodGroupQuery}>
 						<option>Choose Blood Group</option>
 						<option>A+</option>
 						<option>A-</option>
@@ -152,13 +166,13 @@ export default function MainInterface() {
 						<option>O-</option>
 					</select>
 				</div>
-				<div className="mb-2">
-					<p className="inline-block mr-2 w-30 mr-2">Current Location</p>
-					<input type="text" className="border-1 px-1 py-[2px] rounded" onChange={locationQuery}/>
+				<div className="mb-2 flex items-center">
+					<p className="mr-2 w-45 mr-2">Current Location</p>
+					<input type="text" className="border-1 px-1 py-[2px] rounded w-full md:w-1/2" onChange={locationQuery}/>
 				</div>
-				<div className="mb-2">
-					<p className="inline-block mr-2 w-30 mr-2">Donor's Name</p>
-					<input type="text" className="border-1 px-1 py-[2px] rounded" onChange={donorsNameQuery}/>
+				<div className="mb-2 flex items-center">
+					<p className="mr-2 w-45 mr-2">Donor's Name</p>
+					<input type="text" className="border-1 px-1 py-[2px] rounded w-full md:w-1/2" onChange={donorsNameQuery}/>
 				</div>
 			</div>
 			<div className="mx-4 mt-4 text-sm">
@@ -166,11 +180,11 @@ export default function MainInterface() {
 					filtered.length?
 						filtered.map((eachItem, index)=>
 							<p key={index} className="mt-2 bg-green-100 border border-green-300 p-[5px]">
-							Blood Group: <span className="capitalize text-red-800 font-medium"><span>{splittedText(eachItem[3], bloodGroup)[0]}</span><span className="bg-yellow-200">{bloodGroup.toLowerCase()}</span><span>{splittedText(eachItem[3], bloodGroup)[1]}</span></span> <br/>
+							Blood Group: <span className="capitalize text-red-800 font-medium"><span>{splittedText(eachItem[3], bloodGroup)[0]}</span><span className="bg-yellow-200">{bloodGroup.toLowerCase().trim()}</span><span>{splittedText(eachItem[3], bloodGroup)[1]}</span></span> <br/>
 
-							Name: <span className="capitalize text-red-800 font-medium"><span>{splittedText(eachItem[2], donorsName)[0]}</span><span className="bg-yellow-200">{donorsName.toLowerCase()}</span><span>{splittedText(eachItem[2], donorsName)[1]}</span></span> <br/>
+							Name: <span className="capitalize text-red-800 font-medium"><span>{splittedText(eachItem[2], donorsName)[0]}</span><span className="bg-yellow-200">{donorsName.toLowerCase().trim()}</span><span>{splittedText(eachItem[2], donorsName)[1]}</span></span> <br/>
 
-							Location: <span className="capitalize text-red-800 font-medium"><span>{splittedText(eachItem[4], location)[0]}</span><span className="bg-yellow-200">{location.toLowerCase()}</span><span>{splittedText(eachItem[4], location)[1]}</span></span> <br/>
+							Location: <span className="capitalize text-red-800 font-medium"><span>{splittedText(eachItem[4], location)[0]}</span><span className="bg-yellow-200">{location.toLowerCase().trim()}</span><span>{splittedText(eachItem[4], location)[1]}</span></span> <br/>
 
 							Mobile No: <span className="text-red-800 font-medium">{eachItem[5]}</span> <br/>
 
