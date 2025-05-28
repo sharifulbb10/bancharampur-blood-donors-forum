@@ -20,6 +20,7 @@ export default function MainInterface() {
 				const text = await response.text();
 				const json = JSON.parse(text.substring(47).slice(0, -2)); // to remove unnecessary parts from the api
 				const rows = json.table.rows.map(row => row.c.map(cell => (cell? cell.v : "")));
+				console.log(rows);
 				setData(rows); 			// 'data' state update
 				setLoading(!loading); 	// 'loading' state update
 			} catch(error) {
@@ -136,7 +137,7 @@ export default function MainInterface() {
 						<div className="mt-10 text-sm text-white font-light">
 							<section className="mx-5 mt-2 p-1"><a href="https://github.com/sharifulbb10/bancharampur-blood-donors-forum">View Source Code & improve it</a></section>
 							<section className="mx-5 mt-4 p-1"><a href="mailto:sharifulbb10@gmail.com?subject=Found a problem in your BANCHARAMPUR BLOOD DONORS project">Report a bug</a></section>
-							<section className="mx-5 mt-4 p-1"><a href="https://forms.gle/39iRRfQfLRfNiiP29">Register as blood doner</a></section>
+							<section className="mx-5 mt-4 p-1"><a href="https://forms.gle/782r5QwZ3DAJsvi7A">Register as blood doner</a></section>
 						</div>
 					</div>
 				</div>
