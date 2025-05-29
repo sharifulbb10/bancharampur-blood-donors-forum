@@ -144,7 +144,7 @@ export default function MainInterface() {
 			</div>
 
 			<div className="fixed right-0 top-1/2 transform -translate-y-1/2 translate-x-15 -rotate-90 bg-red-800 rounded-t-md opacity-70">
-				<a href="https://forms.gle/JrGsH6vggNQPkU2a9">
+				<a href="https://forms.gle/z7sF7UNHUKjcVnDT7">
 					<div className="py-1 px-2 flex justify-center items-center">
 						{/*<img className="h-8 my-[auto]" src="src/assets/blood_donation.png" />*/}
 						<p className="text-xs text-white text-center font-bold block m-[auto] opacity-100">Are you a Blood Donor?</p>
