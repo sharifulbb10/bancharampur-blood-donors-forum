@@ -20,7 +20,6 @@ export default function MainInterface() {
 				const text = await response.text();
 				const json = JSON.parse(text.substring(47).slice(0, -2)); // to remove unnecessary parts from the api
 				const rows = json.table.rows.map(row => row.c.map(cell => (cell? cell.v : "")));
-				console.log(rows);
 				setData(rows); 			// 'data' state update
 				setLoading(!loading); 	// 'loading' state update
 			} catch(error) {
@@ -34,7 +33,7 @@ export default function MainInterface() {
 	// this function is triggered when user will select a blood group
 	const bloodGroupQuery = (e) => {
 		// "Choose a blood group" is a default option, so no state update for this selection
-		e.target.value!=="Choose Blood Group" ? setBloodGroup(e.target.value) : setBloodGroup(null);
+		e.target.value!=="Choose Blood Group" ? setBloodGroup(e.target.value) : setBloodGroup("");
 	}
 
 	// this function will update the 'location' state, what user will type
@@ -74,10 +73,10 @@ export default function MainInterface() {
 
 	// this function will highlight the searched portion, to help user see which part is matched from his/her search
 	// in the extracted search result
-	// you will find the use of this function in line (169 - 173).
+	// you will find the use of this function in line (183 - 187).
 	function splittedText(text, searched) {
 		text = text.toLowerCase().trim();
-		searched = searched.toLowerCase().trim();
+		searched = searched!==null ? searched.toLowerCase().trim(): "";
 		console.log("searched", searched);
 		let arr = searched ? text.split(searched) : null;
 		if (arr && arr.length > 2) {
